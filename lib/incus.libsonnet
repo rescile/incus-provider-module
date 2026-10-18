@@ -13,12 +13,14 @@ local portfolioData = import 'incus_portfolio.libsonnet';
     [svcKey]: portfolioData[svcKey].decode_target
     for svcKey in std.objectFields(portfolioData)
   } + {
-    // Add any global/cross-cutting infrastructure resources not tied to a single portfolio service
     cluster_member: 'cluster_members',
     certificate: 'certificates',
     operation: 'operations',
     event: 'events',
   },
+
+  // Safely resolve a decoder key
+  getDecode(key, default=''):: std.get(self.decode, key, default),
 
   // Roles map is derived from each service's role definition
   roles: {
@@ -32,14 +34,15 @@ local portfolioData = import 'incus_portfolio.libsonnet';
   // Helper functions
   // Get a specific role object safely
   getRole(roleName)::
-      if std.objectHas(self.roles, roleName) then
-        self.roles[roleName]
-      else
-        error "Role '" + roleName + "' does not exist in Incus provider.",
+    if std.objectHas(self.roles, roleName) then
+      self.roles[roleName]
+    else
+      error "Role '" + roleName + "' does not exist in Incus provider.",
 
   // Get all role keys associated with a service domain
   getServiceRoles(serviceName):: [
-    roleKey for roleKey in std.objectFields(self.roles)
+    roleKey
+    for roleKey in std.objectFields(self.roles)
     if std.get(self.roles[roleKey], 'service') == serviceName
   ],
 
@@ -60,7 +63,7 @@ local portfolioData = import 'incus_portfolio.libsonnet';
       for rk in roleKeys
       if std.objectHas(self.roles[rk], 'component') && std.objectHas(self.roles[rk].component, componentKey)
     ];
-    if std.length(found) > 0 then found[0] else error("Component '" + componentKey + "' not found for service '" + serviceName + "'"),
+    if std.length(found) > 0 then found[0] else error ("Component '" + componentKey + "' not found for service '" + serviceName + "'"),
 
   // Derive a custom role extended with extra permissions
   deriveRoleWithOverrides(roleName, extraPermissions)::
