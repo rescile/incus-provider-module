@@ -1,0 +1,6 @@
+[module]
+name = "Incus Provider Module"
+url = "https://github.com/rescile/incus-provider-module"
+version = "0.0.1"
+description = "The Incus provider module adds the configuration schemas and properties required by a landing zone blueprint to interact with and manage AWS infrastructure APIs."
+rescile_version = ">=0.1.219"
