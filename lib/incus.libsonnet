@@ -8,26 +8,35 @@ local portfolioData = import 'incus_services.libsonnet';
   // Portfolio is represents keys of our portfolio data
   portfolio: std.objectFields(portfolioData),
 
-  // Decode map is dynamically derived from each service's decode_target + component maps
+  // Decode map dynamically derived from service decode_targets + component maps
   decode: {
+    // 1. Service-level decode targets
     [svcKey]: portfolioData[svcKey].decode_target
     for svcKey in std.objectFields(portfolioData)
   } + {
-    cluster_member: 'cluster_members',
-    certificate: 'certificates',
-    operation: 'operations',
-    event: 'events',
+    // 2. Automatically extract component maps from each service role
+    [compKey]: portfolioData[svcKey].role.component[compKey]
+    for svcKey in std.objectFields(portfolioData)
+    for compKey in (
+      local role = std.get(portfolioData[svcKey], 'role', null);
+      if role != null && std.objectHas(role, 'component') && role.component != null
+      then std.objectFields(role.component)
+      else []
+    )
+  } + {
+  // 3. Fallbacks or manual extra decodes
+  cluster_member: 'cluster_members',
+  certificate: 'certificates',
+  operation: 'operations',
+  event: 'events',
   },
 
   // Safely resolve a decoder key
   getResource(key, default=''):: std.get(self.decode, key, default),
 
-  // Roles map is derived from each service's role definition
+  // Roles map fixed to correctly extract the role object
   roles: {
-    [portfolioData[svcKey].role.name]: portfolioData[svcKey] {
-      // Clean up the role object structure for consumers
-      role:: null,
-    }.role
+    [portfolioData[svcKey].role.name]: portfolioData[svcKey].role
     for svcKey in std.objectFields(portfolioData)
   },
 
