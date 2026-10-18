@@ -20,7 +20,7 @@ local portfolioData = import 'incus_services.libsonnet';
   },
 
   // Safely resolve a decoder key
-  getDecode(key, default=''):: std.get(self.decode, key, default),
+  getResource(key, default=''):: std.get(self.decode, key, default),
 
   // Roles map is derived from each service's role definition
   roles: {
