@@ -1,4 +1,4 @@
-local portfolioData = import 'incus_portfolio.libsonnet';
+local portfolioData = import 'incus_services.libsonnet';
 
 {
   title: 'Incus Provider Library',
