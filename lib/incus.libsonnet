@@ -34,6 +34,15 @@ local portfolioData = import 'incus_services.libsonnet';
   // Safely resolve a decoder key
   getResource(key, default=''):: std.get(self.decode, key, default),
 
+  // Get a list of all unique services (combining portfolio keys and role-referenced services)
+  getServices():: std.set(
+    self.portfolio + [
+      self.roles[roleKey].service
+      for roleKey in std.objectFields(self.roles)
+      if std.objectHas(self.roles[roleKey], 'service') && self.roles[roleKey].service != null
+    ]
+  ),
+
   // Roles map fixed to correctly extract the role object
   roles: {
     [portfolioData[svcKey].role.name]: portfolioData[svcKey].role
@@ -82,16 +91,16 @@ local portfolioData = import 'incus_services.libsonnet';
     },
 
   // Generate standardized definition stubs for all portfolio domains
-  generatePortfolioDefinitions():: {
-    [serviceName]: {
-      meta: {
-        provider: self.name,
-        version: self.version,
-        service: serviceName,
-      },
-      associated_roles: self.getServiceRoles(serviceName),
-      permissions: self.getAdminPermissions(serviceName),
-    }
-    for serviceName in self.portfolio
-  },
-}
+    generatePortfolioDefinitions():: {
+      [serviceName]: {
+        meta: {
+          provider: self.name,
+          version: self.version,
+          service: serviceName,
+        },
+        associated_roles: self.getServiceRoles(serviceName),
+        permissions: self.getAdminPermissions(serviceName),
+      }
+      for serviceName in self.getServices()
+    },
+  }
