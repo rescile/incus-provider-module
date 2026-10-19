@@ -194,38 +194,4 @@
     },
   },
 
-  audit: {
-    service: 'audit',
-    decode_target: 'instances',
-    components: {
-      instances: 'instances',
-      projects: 'projects',
-      networks: 'networks',
-      storage: 'storage_pools',
-      volumes: 'storage_volumes',
-      images: 'images',
-      profiles: 'profiles',
-      zones: 'network_zones',
-      acls: 'network_acls',
-      certificates: 'certificates',
-    },
-    role: {
-      name: 'auditor',
-      permissions: [
-        'instances:read',
-        'projects:read',
-        'networks:read',
-        'storage_pools:read',
-        'storage_volumes:read',
-        'images:read',
-        'profiles:read',
-        'network_zones:read',
-        'network_acls:read',
-        'certificates:read',
-        'operations:read',
-        'events:read',
-      ],
-      description: 'Read-only infrastructure and configuration auditing. Do not grant console, exec, file access or secret-bearing workload access.',
-    },
-  },
 }
