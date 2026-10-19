@@ -60,11 +60,11 @@
 
   storage: {
     service: 'storage',
-    decode_target: 'storage_pools',
+    decode_target: 'pools',
     components: {
-      pool: 'storage_pools',
-      volume: 'storage_volumes',
-      bucket: 'storage_buckets',
+      pool: 'pools',
+      volume: 'volumes',
+      bucket: 'buckets',
     },
     role: {
       name: 'storage-administrator',
@@ -90,9 +90,9 @@
     decode_target: 'networks',
     components: {
       network: 'networks',
-      forward: 'network_forwards',
-      address_set: 'network_address_sets',
-      integration: 'network_integrations',
+      forward: 'forwards',
+      address_set: 'address_sets',
+      integration: 'integrations',
     },
     role: {
       name: 'network-administrator',
@@ -116,9 +116,9 @@
 
   firewall: {
     service: 'firewall',
-    decode_target: 'network_acls',
+    decode_target: 'acls',
     components: {
-      acl: 'network_acls',
+      acl: 'acls',
       network: 'networks',
     },
     role: {
@@ -135,9 +135,9 @@
 
   load_balancer: {
     service: 'load_balancer',
-    decode_target: 'network_load_balancers',
+    decode_target: 'load_balancers',
     components: {
-      load_balancer: 'network_load_balancers',
+      load_balancer: 'load_balancers',
       network: 'networks',
     },
     role: {
@@ -154,13 +154,13 @@
 
   dns: {
     service: 'dns',
-    decode_target: 'network_zones',
+    decode_target: 'zones',
     components: {
-      zone: 'network_zones',
-      record: 'network_zone_records',
+      zone: 'zones',
+      record: 'zone_records',
     },
     role: {
-      name: 'dns-administrator',
+      name: 'zone-administrator',
       permissions: [
         'network_zones:read',
         'network_zones:create',
