@@ -1,11 +1,8 @@
-The instance manager for Incus allows to manage workloads through a REST API.
-
-## Connection
-
-* locally: using a local Unix socket, found via --socket, $INCUS_SOCKET, $INCUS_DIR/unix.socket, /var/lib/incus/unix.socket, then /run/incus/unix.socket.
-* remotely, using --url https://host:8443. It reads the client certificate and key from ~/.config/incus/ unless you pass --cert and --key. Trust the server with --server-cert, or skip verification with --insecure.
+The instance manager for Incus allows to manage workloads through a REST API. It connects via HTTPS using --url https://host:8443, reads the client certificate and key from ~/.config/incus/ unless --cert and --key are passed through options. Server trust is established with --server-cert, or skipped verification with --insecure. For development purposes local connections using a Unix socket is supported. Sockets are found via --socket, $INCUS_SOCKET, $INCUS_DIR/unix.socket, /var/lib/incus/unix.socket, then /run/incus/unix.socket.
 
 ## Commands
+
+The instance manager supports the following commands:
 
 * list / show: GET /1.0/instances?recursion=2 for the table, and recursion=1 for show. The list supports table, csv, json and yaml. YAML output needs PyYAML if you have it, otherwise it falls back to JSON.
 * create: POST /1.0/instances followed by a state change if you pass --start. The images:, ubuntu: and ubuntu-daily: remotes are resolved to their simplestreams servers, and local aliases or fingerprints also work.
@@ -14,7 +11,7 @@ The instance manager for Incus allows to manage workloads through a REST API.
 * snapshot / backup: these use the snapshot endpoints, and backup creates a server-side backup, downloads it, then deletes the staged copy.
 * Asynchronous calls: the script waits for each operation to finish and reports its error if it fails.
 
-## Global options
+## Global Options
 
 | Option | Purpose |
 | --- | --- |
@@ -27,7 +24,7 @@ The instance manager for Incus allows to manage workloads through a REST API.
 
 The environment variables `INCUS_SOCKET`, `INCUS_DIR` (for socket lookup) and `INCUS_CONF` (client cert directory) are also read.
 
-## Per-command options
+## Command Options
 
 Every command also accepts `--project NAME`, which the table leaves out.
 
